@@ -37,6 +37,7 @@ Public Class RentalForm
         Seniorcheckbox.Checked = False
     End Sub
 
+    'clears the program
     Private Sub ClearToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ClearToolStripMenuItem1.Click
         NameTextBox.Clear()
         AddressTextBox.Clear()
@@ -73,6 +74,7 @@ Public Class RentalForm
         Static _discount As Decimal
         Static problem As Boolean = True
 
+        'validates that all textboxes have something in them
         If NameTextBox.Text = "" Then
             MsgBox("Please enter your name")
             NameTextBox.Focus()
@@ -107,6 +109,7 @@ Public Class RentalForm
             problem = True
         End If
 
+        'trys to convert the number of days to a number
         Try
             totalDays = Convert.ToInt32(DaysTextBox.Text)
         Catch ex As Exception
@@ -115,6 +118,8 @@ Public Class RentalForm
             problem = True
         End Try
 
+        'if it passed the try catch it will then charge $15 per day if the number 
+        'is between 1 and 45 if not it will prompt the user to enter a valid number
         If totalDays > 0 And totalDays <= 45 Then
             daysCharge = totalDays * 15
             _daysCharge = Math.Round(daysCharge, 2)
@@ -125,6 +130,7 @@ Public Class RentalForm
             problem = True
         End If
 
+        'trys to convert the begining odometer reading to a number
         Try
             beginingOdometerReading = Convert.ToInt32(BeginOdometerTextBox.Text)
         Catch ex As Exception
@@ -132,6 +138,7 @@ Public Class RentalForm
             problem = True
         End Try
 
+        'trys to convert the ending odometer reading to a number
         Try
             endingOdometerReading = Convert.ToInt32(EndOdometerTextBox.Text)
         Catch ex As Exception
@@ -139,6 +146,9 @@ Public Class RentalForm
             problem = True
         End Try
 
+        'checks to make sure that then begining odometer reading is less than the ending odometer reading
+        'if not then it will prompt the user to fix that
+        'if the kilometers radiobutton is selected it will then convert km to miles
         If beginingOdometerReading < endingOdometerReading And MilesradioButton.Checked Then
             totalMilesDriven = (endingOdometerReading - beginingOdometerReading)
             TotalMilesTextBox.Text = CStr(totalMilesDriven) & " mi"
@@ -150,6 +160,7 @@ Public Class RentalForm
             problem = True
         End If
 
+        'charges the proper amount based off of the total miles driven
         If totalMilesDriven < 201 Then
             MileageChargeTextBox.Text = ("$0.00")
         ElseIf totalMilesDriven > 200 And totalMilesDriven < 501 Then
@@ -162,6 +173,7 @@ Public Class RentalForm
             MileageChargeTextBox.Text = CStr($"${_milageCharge}")
         End If
 
+        'checks to see if checkboxes were check and applies the discount accordingly
         If AAAcheckbox.Checked And Seniorcheckbox.Checked Then
             totalCharge = (milageCharge + daysCharge) - (milageCharge + daysCharge) * 0.08
             _totalCharge = CDec(Math.Round(totalCharge, 2))
