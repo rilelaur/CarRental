@@ -60,11 +60,17 @@ Public Class RentalForm
     Private Sub CalculateButton_Click(sender As Object, e As EventArgs) Handles CalculateButton.Click
 
         Static totalDays As Integer
-        Static daysCharge As Double
+        Static daysCharge As Decimal
+        Static _daysCharge As Decimal
         Static beginingOdometerReading As Integer
         Static endingOdometerReading As Integer
         Static totalMilesDriven As Double
         Static milageCharge As Double
+        Static _milageCharge As Decimal
+        Static totalCharge As Double
+        Static _totalCharge As Decimal
+        Static discount As Double
+        Static _discount As Decimal
         Static problem As Boolean = True
 
         If NameTextBox.Text = "" Then
@@ -111,7 +117,8 @@ Public Class RentalForm
 
         If totalDays > 0 And totalDays <= 45 Then
             daysCharge = totalDays * 15
-            DayChargeTextBox.Text = CStr(daysCharge)
+            _daysCharge = Math.Round(daysCharge, 2)
+            DayChargeTextBox.Text = CStr($"${_daysCharge}")
         Else
             MsgBox("Please enter a number between 1 and 45")
             DaysTextBox.Focus()
@@ -134,23 +141,53 @@ Public Class RentalForm
 
         If beginingOdometerReading < endingOdometerReading And MilesradioButton.Checked Then
             totalMilesDriven = (endingOdometerReading - beginingOdometerReading)
-            TotalMilesTextBox.Text = CStr(totalMilesDriven) & " Miles"
+            TotalMilesTextBox.Text = CStr(totalMilesDriven) & " mi"
         ElseIf beginingOdometerReading < endingOdometerReading And KilometersradioButton.Checked Then
             totalMilesDriven = ((endingOdometerReading - beginingOdometerReading) / 1.609)
-            TotalMilesTextBox.Text = CStr(totalMilesDriven) & " Miles"
+            TotalMilesTextBox.Text = CStr(totalMilesDriven) & " mi"
         Else
             MsgBox("Make sure that the ending odometer reading is greater than the begining odometer reading")
             problem = True
         End If
 
         If totalMilesDriven < 201 Then
-            MileageChargeTextBox.Text = CStr(0)
+            MileageChargeTextBox.Text = ("$0.00")
         ElseIf totalMilesDriven > 200 And totalMilesDriven < 501 Then
-            milageCharge = ((totalMilesDriven - 200) * 0.12)
-            MileageChargeTextBox.Text = CStr(milageCharge)
+            milageCharge = CDbl(totalMilesDriven - 200) * 0.12
+            _milageCharge = CDec(Math.Round(milageCharge, 2))
+            MileageChargeTextBox.Text = CStr($"${_milageCharge}")
         ElseIf totalMilesDriven > 500 Then
             milageCharge = ((totalMilesDriven - 200) * 0.1)
-            MileageChargeTextBox.Text = CStr(milageCharge)
+            _milageCharge = CDec(Math.Round(milageCharge, 2))
+            MileageChargeTextBox.Text = CStr($"${_milageCharge}")
+        End If
+
+        If AAAcheckbox.Checked And Seniorcheckbox.Checked Then
+            totalCharge = (milageCharge + daysCharge) - (milageCharge + daysCharge) * 0.08
+            _totalCharge = CDec(Math.Round(totalCharge, 2))
+            discount = (milageCharge + daysCharge) * 0.08
+            _discount = CDec(Math.Round(discount, 2))
+            TotalDiscountTextBox.Text = CStr($"${_discount}")
+            TotalChargeTextBox.Text = CStr($"${_totalCharge}")
+        ElseIf AAAcheckbox.Checked Then
+            totalCharge = (milageCharge + daysCharge) - (milageCharge + daysCharge) * 0.05
+            _totalCharge = CDec(Math.Round(totalCharge, 2))
+            discount = (milageCharge + daysCharge) * 0.05
+            _discount = CDec(Math.Round(discount, 2))
+            TotalDiscountTextBox.Text = CStr($"${_discount}")
+            TotalChargeTextBox.Text = CStr($"${_totalCharge}")
+        ElseIf Seniorcheckbox.Checked Then
+            totalCharge = (milageCharge + daysCharge) - (milageCharge + daysCharge) * 0.03
+            _totalCharge = CDec(Math.Round(totalCharge, 2))
+            discount = (milageCharge + daysCharge) * 0.03
+            _discount = CDec(Math.Round(discount, 2))
+            TotalDiscountTextBox.Text = CStr($"${_discount}")
+            TotalChargeTextBox.Text = CStr($"${_totalCharge}")
+        Else
+            totalCharge = milageCharge + daysCharge
+            _totalCharge = CDec(Math.Round(totalCharge, 2))
+            TotalDiscountTextBox.Text = "$0.00"
+            TotalChargeTextBox.Text = CStr($"${_totalCharge}")
         End If
 
         If problem = False Then
