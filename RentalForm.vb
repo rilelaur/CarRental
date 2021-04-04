@@ -8,8 +8,13 @@ Option Explicit On
 Option Strict On
 Option Compare Binary
 Public Class RentalForm
+    Dim customertotal As Integer
+    Dim totalCharges As Double
+    Dim totalDistanceDriven As Integer = 0
+
     'closes the form
     Private Sub ExitButton_Click(sender As Object, e As EventArgs) Handles ExitButton.Click
+        MsgBox("Would you like to exit?") ', 3 (this should work but isn't)
         Me.Close()
     End Sub
     Private Sub ExitToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem1.Click
@@ -72,6 +77,9 @@ Public Class RentalForm
         Static _totalCharge As Decimal
         Static discount As Double
         Static _discount As Decimal
+        'Static customertotal As Integer
+        'Static totalCharges As Double
+        'Static totalDistanceDriven As Integer = 0
         Static problem As Boolean = True
 
         'validates that all textboxes have something in them
@@ -202,8 +210,31 @@ Public Class RentalForm
             TotalChargeTextBox.Text = CStr($"${_totalCharge}")
         End If
 
+        If TotalMilesTextBox.Text = "" Then
+            problem = True
+        ElseIf MileageChargeTextBox.Text = "" Then
+            problem = True
+        ElseIf DayChargeTextBox.Text = "" Then
+            problem = True
+        ElseIf TotalDiscountTextBox.Text = "" Then
+            problem = True
+        ElseIf TotalChargeTextBox.Text = "" Then
+            problem = True
+        Else
+            problem = False
+            customertotal += 1
+            totalCharges += 1
+            totalDistanceDriven = CInt(totalMilesDriven) + totalDistanceDriven
+        End If
+
         If problem = False Then
             SummaryButton.Enabled = True
         End If
+
     End Sub
+
+    Private Sub SummaryButton_Click(sender As Object, e As EventArgs) Handles SummaryButton.Click
+        MsgBox("Total Customers: " & customertotal & vbCrLf & "Total Charges: " & totalcharges & vbCrLf & "Total miles Driven: " & Totaldistancedriven & " miles")
+    End Sub
+
 End Class
