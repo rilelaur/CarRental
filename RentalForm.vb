@@ -14,11 +14,16 @@ Public Class RentalForm
 
     'closes the form
     Private Sub ExitButton_Click(sender As Object, e As EventArgs) Handles ExitButton.Click
-        MsgBox("Would you like to exit?") ', 3 (this should work but isn't)
-        Me.Close()
+        MsgBox("Would you like to exit?", CType(vbYesNo, MsgBoxStyle))
+        If CBool(DialogResult.Yes) Then
+            Me.Close()
+        End If
     End Sub
     Private Sub ExitToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem1.Click
-        Me.Close()
+        MsgBox("Would you like to exit?", CType(vbYesNo, MsgBoxStyle))
+        If CBool(DialogResult.Yes) Then
+            Me.Close()
+        End If
     End Sub
 
     'clears the form when the clear button is selected
